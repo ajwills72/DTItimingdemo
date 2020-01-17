@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#eddy correct
+SUB=DTI1
+eddy_correct ${SUB}.nii.gz ${SUB}_corr.nii.gz 0
+echo done eddycorrect ${SUB}
+
+#split 4D DTI file, extract brain and create mask from first (unweighted) volume
+fslsplit ${SUB}_corr.nii.gz ${SUB}DTI_ -t
+bet ${SUB}DTI_0000.nii.gz ${SUB}_corr_nodif.nii.gz -m -f 0.35
+rm ${SUB}DTI_00*.nii.gz
+echo mask extracted ${SUB}
+
+#do dtifit
+dtifit -k ${SUB}_corr.nii.gz  -o ${SUB} -m ${SUB}_corr_nodif_mask.nii.gz -r ${SUB}.bvec -b ${SUB}.bval
+echo done dtifit ${SUB}
+
+
