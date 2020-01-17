@@ -2,7 +2,7 @@
 
 
 #eddy correct
-for SUB in DTI1 DTI2 DTI3 DTI4 DTI5 DTI6 DTI7 DTI8 DTI9 DTI10 DTI11 DTI12 DTI13 DTI14 DTI15 DTI16 DTI17 DTI18 DTI19 DTI20
+for SUB in DTI1 DTI2 DTI3 DTI4 DTI5 DTI6 DTI7 DTI8 DTI9 DTI10 DTI11 DTI12 DTI13 DTI14 DTI15 DTI16 DTI17 DTI18 DTI19 DTI20 DTI21 DTI22 DTI23 DTI24 DTI25 DTI26 DTI27 DTI28
 do
 eddy_correct ${SUB}.nii.gz ${SUB}_corr.nii.gz 0
 echo done eddycorrect ${SUB}
@@ -19,7 +19,7 @@ echo mask extracted ${SUB}
 
 dtifit -k ${SUB}_corr.nii.gz  -o ${SUB} -m ${SUB}_corr_nodif_mask.nii.gz -r ${SUB}.bvec -b ${SUB}.bval
 
-echo done dtifit ${SUB}
+echo Finished dtifit ${SUB}
 
 done
 
