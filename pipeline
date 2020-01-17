@@ -1,0 +1,10 @@
+#!/bin/bash
+# DTI test script, requires FSL.
+# Assumes raw data is in a directory called 'data'
+
+# Make analysis directory
+mkdir -p anl
+
+# eddy_correct, fslsplit, bet, dtifit
+# (one core per participant, thanks to GNU parallel)
+ls data/*.nii.gz | parallel ./preproc

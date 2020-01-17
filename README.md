@@ -23,8 +23,9 @@ Data for this script is stored in an [OSF repository](https://osf.io/afmc5/).
 This script was tested on FSL 6.0.3, installing FSL to Ubuntu 18.04 in the
 default location: /usr/local/fsl
 
+### Stage 1
 
-- `eddy_correct`: single-threaded. Corrects for eddy currents and motion
+- `eddy_correct`: single-core. Corrects for eddy currents and motion
   artifacts. Note that this command has been superceded by
   [eddy](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/eddy)
 
@@ -34,7 +35,14 @@ default location: /usr/local/fsl
 - `bet`: trivial execution time. Deletes non-brain tissue from an image. Part of
   the [BET](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/BET) component of FSL.
 
-**Stopped here as I did not have the input files required for the next step.**
+- `dtifit`: single-core. Fits a diffusion tensor model at each voxel. Part
+  of the FDT toolbox of FSL. 
+
+## Improving script for workstation use
+
+Stage 1 of the analysis is single-core. This can be speeded by a factor of the
+number of cores on the workstation, by using GNU parallel. Scripts `preproc`
+and `pipeline` show how. You may need to `sudo apt install parallel`. 
 
 ## Cluster computing notes
 

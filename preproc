@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Extract subject ID from dir/filename passed to script ($1)
+SUB=$(echo "$1" | cut -f 2 -d '/' | cut -f 1 -d '.')
+
+# eddy correct
+eddy_correct data/${SUB}.nii.gz anl/${SUB}_corr.nii.gz 0
+echo done eddycorrect ${SUB}
+
+# Split 4D DTI file, extract brain and create mask from first (unweighted)
+# volume
+fslsplit anl/${SUB}_corr.nii.gz anl/${SUB}DTI_ -t
+bet anl/${SUB}DTI_0000.nii.gz anl/${SUB}_corr_nodif.nii.gz -m -f 0.35
+rm anl/${SUB}DTI_00*.nii.gz
+echo mask extracted ${SUB}
+
+#do dtifit
+dtifit -k anl/${SUB}_corr.nii.gz  -o anl/${SUB} -m anl/${SUB}_corr_nodif_mask.nii.gz -r data/${SUB}.bvec -b data/${SUB}.bval
+
+echo done dtifit ${SUB}
+
+
+
