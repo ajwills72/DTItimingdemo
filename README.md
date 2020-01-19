@@ -3,20 +3,23 @@
 This is a demonstration of how to substantially speed up a DTI analysis script on a
 Linux workstation. The original [script](DTIprocessBRIC), kindly provided by
 Matt Roser, processed 28 participants, and took about 5 hours to run on a 2019
-12-core workstation. By using GNU parallel, I reduced that 30 minutes
+ThinkStation P330 (Intel i7-8700 @ 3.2 Ghz (12 threads), 32 GB RAM, SSD). 
+By using GNU parallel, I reduced that to 30 minutes
 on the same workstation. Timings calculated using `time ./pipeline`.
 
 _Context_: This project was initially intended as a test of speed up on a HPC
 cluster (~1600 nodes). However, the underlying library functions (from FSL)
 only parallelize down to the level of an individual participant. So, moving to
-the HPC cluster would only increase speed by around a factor of 2 (there are
+the HPC cluster, now that the script has been modified to work on multiple cores, 
+would only increase speed by around a factor of 2 (there are
 only 28 participants), and the 15 minutes saved do not merit the time it would
 take to set up FSL on the HPC cluster. FSL also has the ability to interface
 with an HPC cluster using Son of a Grid Engine software, which is not
 implemented on the HPC cluster we planned to use (FOSERES), but for this job,
 this would be no faster than minorly modifying the current script to work with
 SLURM. So, overall, the computation performed by this script is not
-sufficiently intensive to be worth running on an HPC cluster. 
+sufficiently intensive to be worth running on an HPC cluster -- unless you have a
+sample size in the hundreds.
 
 ## Running the demo
 
@@ -35,7 +38,7 @@ use.
 
 2. You must also install GNU parallel `sudo apt install parallel`.
 
-3. Download this git repository to your machine.
+3. Download the git repository you are reading right now to your machine.
 
 4. The data for this script (about 400MB) is stored in a private [OSF
 repository](https://osf.io/afmc5/). Ask Andy Wills for access. Download the
@@ -79,7 +82,7 @@ end of the `pipeline` script.
 ## Components of the script
 
 In the below, (intensive) means it makes humanly-relevant time to
-run. (trivial) means it does not.
+run; (trivial) means it does not.
 
 ### In `preproc`
 
@@ -97,21 +100,20 @@ run. (trivial) means it does not.
   of the FDT toolbox of FSL. 
  
 - `tbss_1_preproc`: (trivial). Erodes FA images
-  and zeros end slices. Would be better placed in Stage 1 for easier
-  parallelization as it operates separately on each participant.
-
+  and zeros end slices.
+  
 - `tbss_2_reg`: (intensive). Non-linear registration to align each subject to a
   standard target (FMRIB58_FA)
 
 ## After `preproc`
 
-- `tbss_3_postreg`: single core, but too fast to worry about. Aligns above
+- `tbss_3_postreg`: (trivial). Aligns above
   target to MNI152 space.  Then aligns each participant to the target image,
   and transforms to MNI152 space. Creates a single 4D image called `all_FA` of
   all participants, and a mean image called `mean_FA` and, from that,
   skeletonisation into `mean_FA_skeleton`.
 
-- `tbss_4_prestats`: single core, but too fast to worry about. Results in a 4D
+- `tbss_4_prestats`: (trivial). Results in a 4D
   image file (where 'timepoint' is subject ID) containing the projects
   sekeltonized FA data. It's called `all_FA_skeletonised.nii.gz`. This is what
   the subsequent analyses are performed upon.
