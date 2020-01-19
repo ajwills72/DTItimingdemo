@@ -2,9 +2,20 @@
 # DTI test script, requires FSL.
 # Assumes raw data is in a directory called 'data'
 
-# Make analysis directory
-mkdir -p anl
+# Make TBSS analysis directory
+mkdir -p anltbss
 
-# eddy_correct, fslsplit, bet, dtifit
-# (one core per participant, thanks to GNU parallel)
+# eddy_correct, fslsplit, bet, dtifit, tbss_1_preproc, tbss_2_reg
+# (one core per participant, using GNU parallel)
 ls data/*.nii.gz | parallel ./preproc
+
+# Final stages require all data sets together
+cd anltbss
+
+# Align to MNI152 space. Generate aggregates and means.
+tbss_3_postreg -S
+echo tbss_3_postreg finished 
+
+# Create 4D file with skeletonised FA data.
+tbss_4_prestats 0.2
+echo tbss_4_prestats finished 
