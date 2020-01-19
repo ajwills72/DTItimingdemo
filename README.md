@@ -1,10 +1,10 @@
 # DTItimingdemo
 
-This is a demonstration of how to substantially speed up DTI analysis on a
+This is a demonstration of how to substantially speed up a DTI analysis script on a
 Linux workstation. The original [script](DTIprocessBRIC), kindly provided by
 Matt Roser, processed 28 participants, and took about 5 hours to run on a 2019
-12-core workstation. By using GNU parallel, Andy Wills reduced that 30 minutes
-on the same workstation. Timings calculated using `time ./pipline`.
+12-core workstation. By using GNU parallel, Ireduced that 30 minutes
+on the same workstation. Timings calculated using `time ./pipeline`.
 
 _Context_: This project was initially intended as a test of speed up on a HPC
 cluster (~1600 nodes). However, the underlying library functions (from FSL)
